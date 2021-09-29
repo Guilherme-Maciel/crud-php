@@ -63,4 +63,43 @@ class Database{
         return $this->connection->lastInsertId();
 
     }
+
+    //consulta no banco
+    public function select($where = null, $order = null, $limit = null, $fields = '*'){
+        $where = strlen($where) ? 'WHERE '.$where : '';
+        $order = strlen($order) ? 'ORDER BY '.$order : '';
+        $limit = strlen($limit) ? 'LIMIT '.$limit : '';
+
+        //query
+        $query = 'SELECT '.$fields.' FROM '.$this->table.' '.$where.' '.$order.' '.$limit;
+
+        //execução
+        return $this->execute($query);
+
+    }
+
+    //atualiza dados do banco
+    public function update($where,$values){
+        //dados
+        $fields = array_keys($values);
+
+        //query
+        $query = 'UPDATE '.$this->table.' SET '.implode('=?,',$fields).'=? WHERE '.$where;
+
+        //execução
+        $this->execute($query,array_values($values));
+        return true;
+
+    }
+
+    //excluir vaga
+    public function delete($where){
+        //query
+        $query = 'DELETE FROM '.$this->table.' WHERE '.$where;
+
+        //execução
+        $this->execute($query);
+        return true;
+
+    }
 }
